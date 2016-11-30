@@ -1,0 +1,32 @@
+---
+# file: <ansible base dir>/group_vars/all/vars
+
+nameserver1: 10.200.96.87
+nameserver2: 10.200.96.123
+proxy_env:
+   site_proxy: http://proxy.esl.cisco.com:8080
+   no_proxy: localhost,127.0.0.1,.cisco.com,.gspie.lab,10.200.96.74,darthmaul,mothra
+
+# Ubuntu Release and VPP version settings for VPP installation
+ubuntu_rel: trusty
+ubuntu_ver: "stable.1609"
+
+go_install_location: /usr/local/go 
+go_workspace: mygo
+go_ver: 1.6
+golang_environment_file: /etc/profile.d/golang.sh
+
+ANSIBLE_STDOUT_CALLBACK: debug
+
+#Docker setup
+desired_ubuntu_ver: 14.04
+#desired_ubuntu_ver: 22.22
+min_kernel_ver: 3.10
+docker_keyid: 58118E89F3A912897C070ADBF76221572C52609D
+docker_keyserver: hkp://ha.pool.sks-keyservers.net:80
+docker_apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }} main
+# Set to 'yes' or 'true' to enable docker package updates 
+update_docker_package: no
+docker_pkg_name: docker-engine
+# For production boxes, we will install a specific version
+docker_pkg_version: docker-engine=1.12.3-0~trusty
