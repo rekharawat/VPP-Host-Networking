@@ -1,0 +1,38 @@
+---
+# Summary: Main Ansible playbook to install the software for Bell Canada VPP deployment POC
+# Usage: 
+# $ansible-playbook -i inventory/bc_hosts -v bell_vpp.yml -K --extra-vars 'user=rrawat'
+# 
+
+
+- name: bell canada VPP setup
+# Test servers
+  hosts: servers
+# Production servers
+#  hosts: production
+# the user needs to be specified on the command line
+  remote_user: "{{ user }}" 
+  become: no 
+  connection: ssh
+  gather_facts: yes
+
+  environment:
+    http_proxy: http://proxy.esl.cisco.com:8080
+    https_proxy: http://proxy.esl.cisco.com:8080
+    ftp_proxy: http://proxy.esl.cisco.com:8080
+    all_proxy: http://proxy.esl.cisco.com:8080
+    no_proxy: "localhost,127.0.0.1,.cisco.com,.gspie.lab,10.200.96.74,darthmaul,mothra,10.200.96.120"
+    ANSIBLE_STDOUT_CALLBACK: json
+
+  roles:
+#    - { role: ping, tags: [ 'ping' ] }
+#    - { role: golang, tags: [ 'golang' ], become: yes }
+#    - { role: gobgp, tags: [ 'gobgp' ] } 
+#    - { role: vpp-build, tags: [ 'vpp-build' ] } 
+#    - { role: vpp-install, tags: [ 'vpp-install' ], become: yes } 
+    - { role: docker, tags: [ 'docker' ] }
+
+
+#  tasks:
+#  - shell: whoami
+

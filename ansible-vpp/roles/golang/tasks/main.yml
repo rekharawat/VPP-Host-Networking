@@ -1,0 +1,23 @@
+---
+# Update cache and install and setup the Golang environment
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: install "unzip" package 
+  apt: 
+    name: unzip
+    state: latest
+    cache_valid_time: 3600
+
+- name: Get and extract golang version 1.6
+  unarchive:
+    src="https://storage.googleapis.com/golang/go{{ go_ver }}.linux-amd64.tar.gz"
+    dest='/usr/local/'
+    copy=no
+
+- name: copy golang environment
+  copy: src='golang.sh' dest={{ golang_environment_file }}
+  

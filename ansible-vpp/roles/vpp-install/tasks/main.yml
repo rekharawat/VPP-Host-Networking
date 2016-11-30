@@ -1,0 +1,24 @@
+---
+# Role for installing GoBgp software
+# This includes gobgp daemon and gobgp
+
+ - name: print current dir
+   command: pwd
+
+ - name: Add environment variable UBUNTU  in the .profile
+   lineinfile: dest=/home/{{ user }}/.profile line='export UBUNTU={{ ubuntu_rel }}' insertafter='EOF' 
+
+ - name: Add environment variable UBUNTU_RELEASE  in the .profile
+   lineinfile: dest=/home/{{ user }}/.profile line='export UBUNTU_RELEASE={{ ubuntu_ver }}' insertafter='EOF' 
+
+ - name: Clear the apt sources for fd.io
+   file: path={{ item }} state=absent
+   with_fileglob: /etc/apt/sources.list.d/99fd.io.list
+   become: yes
+
+ - name: Install the VPP binaries
+   environment:
+     UBUNTU: 'trusty'
+     UBUNTU_RELEASE: ".stable.1609"
+   command: echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$UBUNTU_RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
+

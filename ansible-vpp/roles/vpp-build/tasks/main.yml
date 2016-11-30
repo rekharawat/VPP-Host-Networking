@@ -1,0 +1,17 @@
+---
+# Role for downloading, building and installing VPP package 
+
+ - name: Check git version
+   command: git version
+
+ - name: Download VPP repo
+   git: repo=https://gerrit.fd.io/r/vpp
+        dest="/home/{{user}}/vpp/"
+        version=v16.09
+        recursive=yes
+
+ - name: Build VPP code
+#   command: pwd 
+   command: ./build-root/vagrant/build.sh
+   args: 
+     chdir: "/home/{{user}}/vpp/"
