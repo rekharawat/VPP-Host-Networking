@@ -1,0 +1,70 @@
+---
+
+# tasks file for docker.ubuntu
+
+    - debug:
+        msg: "{{ docker_apt_repository }}"
+
+    - debug:
+        msg: "{{ ansible_distribution| lower }}"
+
+    - debug:
+        msg: "{{ ansible_distribution_version }}"
+
+    - name: Check Ubuntu version is Trusty aka 14.04
+      fail:
+        msg: "{{ ansible_distribution_version }} is not the recommended Ubuntu version "
+      when:  (ansible_distribution|lower == "ubuntu") and (  ansible_distribution_version | version_compare("{{ desired_ubuntu_ver }}", operator='ne', strict=True)  ) 
+
+    - name: Get the Linux kernel version
+      shell: uname -r | sed  's/\([0-9]\.[0-9]*\).*/\1/'
+      register: curr_kernel_ver
+
+    - name: Check supported Linux kernel for Docker
+      fail:
+        msg: "{{ ansible_kernel }} kernel version is not the supported by Docker"
+      when: " {{  curr_kernel_ver.stdout  | version_compare(min_kernel_ver, operator='lt', strict=True) }} "
+
+    - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+      become: yes
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      
+    - name: Install http apt transport and ca certificates
+      become: yes
+      apt:
+        name: "{{item}}"
+        state: present
+      with_items:
+        - apt-transport-https 
+        - ca-certificates
+
+    - name: Add Docker repository key
+      apt_key:
+        id: "{{ docker_keyid }}"
+        keyserver: "{{ docker_keyserver }}"
+        state: present
+      ignore_errors: true
+
+    - name:  Add specified docker repository into sources list and update the cache
+      become: yes
+      apt_repository: 
+          repo: "{{ docker_apt_repository }}" 
+          mode: '644'
+          state: present 
+          filename: 'docker'
+          update_cache: yes
+
+    - name: Get Linux kernel info
+      command: uname -r
+      register: linux_kernel
+
+    - name: Install prereq packages linux-image-extra for Ubuntu Trusty
+      become: yes
+      apt:
+        name: "{{item}}"
+        state: present
+      with_items:
+        - "linux-image-extra-{{linux_kernel.stdout}}"
+        - linux-image-extra-virtual

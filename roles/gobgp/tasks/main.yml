@@ -1,0 +1,25 @@
+---
+# Role for installing GoBgp software
+# This includes gobgp daemon and gobgp
+
+ - name: print current dir
+   command: pwd
+
+ - name: Add the GOPATH in the .profile
+   lineinfile: dest=/home/{{ user }}/.profile line='export GOPATH=$HOME/{{ go_workspace }}' insertafter='EOF' 
+
+ - name: Install gobgp daemon
+   environment:
+     GOPATH: '/home/{{ user }}/{{ go_workspace }}'
+     PATH: '{{ go_install_location }}/bin:{{ ansible_env.PATH }}'
+   command: go get github.com/osrg/gobgp/gobgpd
+   #command: printenv
+   
+
+ - name: Install gobgp 
+   vars:
+     go_install: /usr/local/go
+   environment:
+     GOPATH: '/home/{{ user }}/{{ go_workspace }}'
+     PATH: '{{ go_install_location }}/bin:{{ ansible_env.PATH }}'
+   command: go get github.com/osrg/gobgp/gobgp

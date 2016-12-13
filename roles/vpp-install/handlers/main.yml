@@ -1,0 +1,11 @@
+---
+# Define the handlers for VPP
+ 
+    - name: start vpp service
+      service: name=vpp state=started
+
+    - name: restart vpp service
+      service: name=vpp state=restarted
+
+    - name: stop vpp service
+      service: name=vpp state=stop

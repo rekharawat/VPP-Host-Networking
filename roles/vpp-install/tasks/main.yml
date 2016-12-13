@@ -1,0 +1,56 @@
+---
+# Role for installing GoBgp software
+# This includes gobgp daemon and gobgp
+
+ - name: print current dir
+   command: pwd
+
+ - name: Add environment variable UBUNTU  in the .profile
+   lineinfile: 
+     dest: /home/{{ user }}/.profile 
+     line: 'export UBUNTU={{ ubuntu_rel }}' 
+     regexp: '^export UBUNTU='
+     insertafter: 'EOF' 
+
+ - name: Add environment variable UBUNTU_RELEASE  in the .profile
+   lineinfile: 
+     dest: /home/{{ user }}/.profile 
+     line: 'export UBUNTU_RELEASE={{ ubuntu_ver }}' 
+     regexp: '^export UBUNTU_RELEASE='
+     insertafter: 'EOF' 
+
+ - name: Clear the apt sources for fd.io
+   file: path=/etc/apt/sources.list.d/99fd.io.list state=absent
+   become: yes
+
+ - name: Install the VPP binaries (update sources list)
+   environment:
+     UBUNTU: "{{ubuntu_rel}}"
+     UBUNTU_RELEASE: "{{ubuntu_ver}}"
+   become: yes
+   shell: echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$UBUNTU_RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
+
+ - name: Install the VPP binaries (update the cache)
+   environment:
+     UBUNTU: "{{ubuntu_rel}}"
+     UBUNTU_RELEASE: "{{ubuntu_ver}}"
+   become: yes
+   apt:
+       update_cache: yes
+
+ - name: Install the VPP binaries (install vpp )
+   environment:
+     UBUNTU: "{{ubuntu_rel}}"
+     UBUNTU_RELEASE: "{{ubuntu_ver}}"
+   become: yes
+   apt:
+     name: vpp 
+     state: present
+
+ - name: Install the VPP binaries (install vpp-dpdk-dkms)
+   environment:
+     UBUNTU: "{{ubuntu_rel}}"
+     UBUNTU_RELEASE: "1701"
+   become: yes
+   apt:
+     name: vpp-dpdk-dkms 
