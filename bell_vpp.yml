@@ -29,7 +29,13 @@
 #    - { role: golang, tags: [ 'golang' ], become: yes }
 #    - { role: gobgp, tags: [ 'gobgp' ] } 
 #    - { role: vpp-build, tags: [ 'vpp-build' ] } 
-    - { role: vpp-install, tags: [ 'vpp-install' ] } 
+
+##   To remove vpp, set run_uninstall to true
+##   To install vpp, set run_install to true
+#    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_uninstall": true} 
+#    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_install": true} 
+    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_install": true, "run_uninstall": true} 
+
 #    - { role: docker, tags: [ 'docker' ] }
 
 
