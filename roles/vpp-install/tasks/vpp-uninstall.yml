@@ -1,0 +1,18 @@
+---
+# Role for uninstalling vpp binaries and related dependencies
+
+
+# Removal of VPP and dependencies
+ - name: Remove vpp packages ( when run_uninstall is set to true)
+   become: yes
+   apt:  
+     pkg: "{{ item }}" 
+     state: absent
+     purge: yes
+     force: yes
+   with_items:
+       - vpp
+       - vpp-lib
+       - vpp-dpdk-dkms
+
+
