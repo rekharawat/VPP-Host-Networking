@@ -1,11 +1,14 @@
 ---
 # Define the handlers for VPP
  
-    - name: start vpp service
+    #: start vpp service
+    - name: start_vpp 
       service: name=vpp state=started
 
-    - name: restart vpp service
+    #: restart vpp service
+    - name: restart_vpp 
       service: name=vpp state=restarted
 
-    - name: stop vpp service
+    #: stop vpp service
+    - name: stop_vpp
       service: name=vpp state=stop

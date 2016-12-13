@@ -1,4 +1,5 @@
 ---
+
 # file: <ansible base dir>/group_vars/all/vars
 
 nameserver1: 10.200.96.87
