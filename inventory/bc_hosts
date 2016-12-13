@@ -1,0 +1,14 @@
+[servers]
+rekha-dev2.gspie.lab
+#rekha-dev1.gspie.lab
+
+[production]
+#sandbox1
+sandbox2
+
+[routers]
+sandbox3
+
+[test]
+rekha-dev1.gspie.lab
+

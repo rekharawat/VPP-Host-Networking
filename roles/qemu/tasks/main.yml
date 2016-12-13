@@ -1,0 +1,13 @@
+---
+    - name: install kvm related packages for qemu and libvirt 
+      when: ansible_os_family == 'Debian'
+      apt: pkg=""
+      with_items:
+        - qemu-kvm
+        - bridge-utils
+        - wget
+        - qemu-utils
+        - python-libvirt
+        - libvirt-bin
+        - vlan
+        - nfs-common

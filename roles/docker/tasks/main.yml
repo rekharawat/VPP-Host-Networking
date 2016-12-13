@@ -1,0 +1,45 @@
+---
+
+# tasks file for docker.ubuntu
+
+    - name: Invoke the prereqs for docker installation
+      include: docker-prereq.yml
+
+    - name: Install/Update the docker package
+      become: yes
+      apt:
+        name: "{{item}}"
+        state: "{{ 'latest' if update_docker_package else 'present' }}"
+        update_cache: yes
+        cache_valid_time: 3600
+      with_items:
+         - "{{docker_pkg_name if update_docker_package else docker_pkg_version}}"
+
+    - name: Start docker
+      service:
+        name: docker
+        state: started
+      when: docker_pkg_name.find('docker-engine') != -1
+
+# Verify that apt is pulling from the right repository
+#apt-cache policy docker-engine
+      
+#    - command: echo $ANSIBLE_STDOUT_CALLBACK 
+
+#    - command: printenv
+
+#    - command: /bin/false
+#      register: result
+#      ignore_errors: True
+#
+#    - command: /bin/ls
+#      when: result|failed
+#
+#    - command: uname -r
+#      register: result
+#
+#    - debug:
+#        msg: "{{ ansible_env | to_nice_json }}"
+
+
+
