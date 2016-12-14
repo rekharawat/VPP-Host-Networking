@@ -29,13 +29,23 @@
    become: yes
    shell: echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$UBUNTU_RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
 
- - name: Install the VPP binaries (update the cache)
+ - name:  apt update - update the cache
    environment:
      UBUNTU: "{{ubuntu_rel}}"
      UBUNTU_RELEASE: "{{ubuntu_ver}}"
    become: yes
    apt:
        update_cache: yes
+   register: apt_result
+   until: apt_result | success
+   retries: 3
+   delay: 1
+   ignore_errors: yes
+
+ - name: retry if needed using command apt-get update
+   command: apt-get update
+   become: yes
+   when: apt_result|failed
 
  - name: Install the VPP binaries (install vpp )
    environment:

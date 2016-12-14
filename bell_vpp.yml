@@ -7,9 +7,9 @@
 
 - name: bell canada VPP setup
 # Test servers
-  hosts: servers
+#  hosts: servers
 # Production servers
-#  hosts: production
+  hosts: production
 # the user needs to be specified on the command line
   remote_user: "{{ user }}" 
   become: no 
@@ -33,7 +33,7 @@
 ##   To remove vpp, set run_uninstall to true
 ##   To install vpp, set run_install to true
 #    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_uninstall": true} 
-#    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_install": true} 
+    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_install": true} 
 #    - { role: vpp-install, tags: [ 'vpp-install' ] , "run_install": true, "run_uninstall": true} 
 
 #    - { role: docker, tags: [ 'docker' ] }
